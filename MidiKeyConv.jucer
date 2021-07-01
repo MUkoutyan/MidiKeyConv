@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="ntCrg3" name="MidiKeyConv" projectType="guiapp" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              cppLanguageStandard="latest">
+  <MAINGROUP id="pakpWU" name="MidiKeyConv">
+    <GROUP id="{B40BBCCA-FD48-4438-FCED-1D38A45280CE}" name="Source">
+      <FILE id="Y5TSmY" name="KeySequence.h" compile="0" resource="0" file="Source/KeySequence.h"/>
+      <FILE id="nA7uSM" name="KeySlotView.hpp" compile="0" resource="0" file="Source/KeySlotView.hpp"/>
+      <FILE id="Om3Vy7" name="StateTextButton.h" compile="0" resource="0"
+            file="Source/StateTextButton.h"/>
+      <FILE id="b8Wzc2" name="CCAssignComponent.cpp" compile="1" resource="0"
+            file="Source/CCAssignComponent.cpp"/>
+      <FILE id="jQkt9J" name="CCAssignComponent.h" compile="0" resource="0"
+            file="Source/CCAssignComponent.h"/>
+      <FILE id="gmfMnm" name="CustomMidiKeyboard.cpp" compile="1" resource="0"
+            file="Source/CustomMidiKeyboard.cpp"/>
+      <FILE id="TwUYXK" name="CustomMidiKeyboard.h" compile="0" resource="0"
+            file="Source/CustomMidiKeyboard.h"/>
+      <FILE id="zEa9NX" name="KeyMessageSender_Windows.cpp" compile="1" resource="0"
+            file="Source/KeyMessageSender_Windows.cpp"/>
+      <FILE id="A0F3Hx" name="KeyMessageSender.h" compile="0" resource="0"
+            file="Source/KeyMessageSender.h"/>
+      <FILE id="GqKH9z" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="jLKjsJ" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="JgPiBi" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"
+               JUCE_USE_STUDIO_ONE_COMPATIBLE_PARAMETERS="0" JUCE_ALSA="0" JUCE_USE_ANDROID_OBOE="0"
+               JUCE_DIRECTSOUND="0"/>
+  <EXPORTFORMATS>
+    <VS2019 targetFolder="Builds/VisualStudio2019">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="MidiKeyConv"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="MidiKeyConv"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="G:/Library/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="G:/Library/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="G:/Library/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="G:/Library/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="G:/Library/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="G:/Library/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="G:/Library/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="G:/Library/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="G:/Library/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="G:/Library/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="G:/Library/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2019>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
+  </MODULES>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
+</JUCERPROJECT>
