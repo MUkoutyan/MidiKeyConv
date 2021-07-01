@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="ntCrg3" name="MidiKeyConv" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              cppLanguageStandard="latest">
+              cppLanguageStandard="latest" version="0.90.0">
   <MAINGROUP id="pakpWU" name="MidiKeyConv">
     <GROUP id="{B40BBCCA-FD48-4438-FCED-1D38A45280CE}" name="Source">
       <FILE id="Y5TSmY" name="KeySequence.h" compile="0" resource="0" file="Source/KeySequence.h"/>
