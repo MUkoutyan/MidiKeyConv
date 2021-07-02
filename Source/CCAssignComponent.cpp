@@ -1,4 +1,4 @@
-﻿/*
+/*
   ==============================================================================
 
     CCAssignComponent.cpp
@@ -18,16 +18,21 @@ using namespace juce;
 //==============================================================================
 CCAssignComponent::CCAssignComponent(KeyMessageSender* keySender, juce::Component* parent)
     : keySender(keySender)
+    , learnButton("Learn")
     , ccSelector()
     , transitionMethod({"List", "Range"})
     , slotView()
     , assignKeys({})
+    , isLearn(false)
 {
+    this->addAndMakeVisible(learnButton);
     this->addAndMakeVisible(ccSelector);
     this->addAndMakeVisible(transitionMethod);
     this->addAndMakeVisible(slotView);
 
-    parent->addKeyListener(this);
+    learnButton.onStateChange = [this](){
+        this->isLearn = learnButton.getToggleState();
+    };
 
     for(int i = 0; i < 128; ++i){
         ccSelector.addItem("CC : " + String(i), i+1);
@@ -35,10 +40,7 @@ CCAssignComponent::CCAssignComponent(KeyMessageSender* keySender, juce::Componen
     ccSelector.onChange = [this](){
         auto currentIndex = ccSelector.getSelectedItemIndex();
         if(currentIndex == -1){ return; }
-
-        const auto& assign = assignKeys[currentIndex];
-        transitionMethod.setCurrentState(assign.seq.seqType);
-        slotView.SetCCKey(assign);
+        ChangeCC(currentIndex);
     };
 
     transitionMethod.onStateChange = [this]()
@@ -67,8 +69,11 @@ CCAssignComponent::CCAssignComponent(KeyMessageSender* keySender, juce::Componen
     {
         auto currentIndex = ccSelector.getSelectedItemIndex();
         if(currentIndex == -1){ return; }
+
         auto& assign = assignKeys[currentIndex];
-        assign.keys.erase(assign.keys.begin() + index);
+        if(index < assign.keys.size()){
+            assign.keys.erase(assign.keys.begin() + index);
+        }
         slotView.SetKeys(assign.keys);
     };
 }
@@ -86,10 +91,13 @@ void CCAssignComponent::resized()
 {
     auto bounds = this->getBounds();
     bounds.setHeight(24);
-    bounds.removeFromLeft(36);
+
+    bounds.removeFromLeft(12);
+    learnButton.setBounds(bounds.removeFromLeft(65));
+    bounds.removeFromLeft(12);
     ccSelector.setBounds(bounds.removeFromLeft(120));
     bounds.removeFromLeft(12);
-    transitionMethod.setBounds(bounds.removeFromLeft(120));
+    transitionMethod.setBounds(bounds.removeFromLeft(70));
     bounds.removeFromLeft(24); 
     bounds.removeFromRight(36);
     slotView.setBounds(bounds);
@@ -105,12 +113,12 @@ void CCAssignComponent::SetAssignMode(bool assignMode)
     slotView.SetAssignMode(assignMode);
 }
 
-inline bool CCAssignComponent::keyPressed(const juce::KeyPress& k, juce::Component* originatingComponent)
+void CCAssignComponent::receivKeyPressed(const juce::KeyPress& k)
 {
-    auto currentIndex = ccSelector.getSelectedItemIndex();
-    if(currentIndex == -1){ return false; }
+    if(slotView.IsAssignMode() == false){ return; }
 
-    if(slotView.IsAssignMode() == false){ return false; }
+    auto currentIndex = ccSelector.getSelectedItemIndex();
+    if(currentIndex == -1){ return; }
 
     auto& assign = assignKeys[currentIndex];
     if(assign.keys.size() < 128)
@@ -118,7 +126,7 @@ inline bool CCAssignComponent::keyPressed(const juce::KeyPress& k, juce::Compone
         assign.keys.emplace_back(k);
         slotView.SetKeys(assign.keys);
     }
-    return false;
+    return;
 }
 
 void CCAssignComponent::handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message)
@@ -126,6 +134,13 @@ void CCAssignComponent::handleIncomingMidiMessage(juce::MidiInput* source, const
     if(message.isController() == false){ return; }
 
     auto ccIndex = message.getControllerNumber();
+    if(isLearn){
+        juce::MessageManagerLock locker(juce::Thread::getCurrentThread());
+        ccSelector.setSelectedItemIndex(ccIndex, false);
+        ChangeCC(ccIndex);
+        return;
+    }
+
     auto& assign = assignKeys[ccIndex];
     if(assign.keys.empty()){ return; }
     if(assign.keys[0].getKeyCode() == 0){ return; }
@@ -179,4 +194,11 @@ void CCAssignComponent::SendKey(const juce::KeyPress& keyPress)
     keySender->SendDownKey(keyPress);
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
     keySender->SendReleaseKey(keyPress);
+}
+
+void CCAssignComponent::ChangeCC(int ccNo)
+{
+    const auto& assign = assignKeys[ccNo];
+    transitionMethod.setCurrentState(assign.seq.seqType);
+    slotView.SetCCKey(assign);
 }

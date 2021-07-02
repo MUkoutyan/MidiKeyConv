@@ -1,4 +1,4 @@
-﻿/*
+/*
   ==============================================================================
 
     KeySlotView.h
@@ -20,10 +20,20 @@ class KeySlotView  : public juce::AnimatedAppComponent
 {
 public:
     KeySlotView()
-        : labelFont("Meiryo UI", 14, 0)
+        : labelFont(
+#ifdef JUCE_WINDOWS
+            "Meiryo UI",
+#else 
+            "Osaka",
+#endif
+            14, 0)
         , currentIndex(-1)
         , currentCCValue(0)
+        , seqType(SequenceType::List)
     {
+        this->setName("KeySlotView");
+        this->setFocusContainer(true);
+        this->setWantsKeyboardFocus(true);
         // In your constructor, you should add any child components, and
         // initialise any special settings that your component needs.
         setFramesPerSecond(60);
@@ -36,8 +46,8 @@ public:
     void SetCCKey(const CCKey& ccKey)
     {
         this->SetSequenceType(ccKey.seq.seqType);
-        this->setIndex(ccKey.seq.currentIndex);
         this->SetKeys(ccKey.keys);
+        this->setIndex(ccKey.seq.currentIndex);
         this->SetCurrentCCValue(ccKey.seq.range.beforeValue);
     }
 
@@ -52,7 +62,7 @@ public:
 
         UpdateKeysArea();
 
-        if(keys.size() <= currentIndex){
+        if(0 <= currentIndex && keys.size() <= currentIndex){
             currentIndex = juce::jmax(0, int(keys.size()) - 1);
         }
     }
@@ -65,7 +75,7 @@ public:
         g.setColour(isAssignMode ? juce::Colour(0x66660000) : juce::Colour(0x66000000));
         g.fillRect(bounds);
         g.setColour(juce::Colours::grey);
-        g.drawRect(bounds, 1.f);
+        g.drawRect(bounds, this->getCurrentlyFocusedComponent() == this ? 2.5f : 1.f);
 
         if(seqType == SequenceType::Range){
             float x = juce::jmap(this->currentCCValue, 0, 127, 0, bounds.getWidth());
@@ -136,11 +146,15 @@ public:
 
     void mouseUp(const juce::MouseEvent& e) override
     {
+        const auto& pos = e.getMouseDownPosition();
+        if(this->getLocalBounds().contains(pos)){
+            this->grabKeyboardFocus();
+        }
         if(e.mods.isRightButtonDown() && isAssignMode)
         {
             for(int index = 0; const auto & area : listTypeKeysArea)
             {
-                if(area.contains(e.getMouseDownPosition()))
+                if(area.contains(pos))
                 {
                     if(rightClickKeyIndex)
                     {
@@ -155,7 +169,7 @@ public:
         {
             for(int index = 0; const auto & area : listTypeKeysArea)
             {
-                if(area.contains(e.getMouseDownPosition()))
+                if(area.contains(pos))
                 {
                     currentIndex = index;
                     return;

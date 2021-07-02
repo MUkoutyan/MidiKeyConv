@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <JuceHeader.h>
 #include "KeyMessageSender.h"
@@ -24,6 +24,7 @@ public:
 
 protected:
     void handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message);
+    bool keyPressed(const juce::KeyPress& key) override;
 
 private:
 
@@ -59,6 +60,8 @@ private:
 	bool isSuspendSaveProperty;
 	juce::ApplicationProperties properties;
 	juce::PropertiesFile* propertiesFile;
+
+    juce::Component* currentFocusComponent;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

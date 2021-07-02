@@ -22,9 +22,11 @@ CustomMidiKeyboard::CustomMidiKeyboard(KeyMessageSender* keySender, juce::MidiKe
     , assignKeys()
     , isAssignMode(false)
 {
+    this->setName("MIDIKeyboard");
     std::fill(selectedKeys.begin(), selectedKeys.end(), false);
     this->setKeyWidth(32.f);
 
+    Desktop::getInstance().addFocusChangeListener(this);
 }
 
 void CustomMidiKeyboard::SetAssignMode(bool assign)
@@ -119,30 +121,37 @@ bool CustomMidiKeyboard::mouseDownOnKey(int midiNoteNumber, const MouseEvent& e)
     }
 
     this->selectedKeys[midiNoteNumber] = !this->selectedKeys[midiNoteNumber];
+
+    if(e.mods.isRightButtonDown()){
+        assignKeys[midiNoteNumber] = KeyPress();
+    }
+
     this->repaint();
     return false;
 }
 
-bool CustomMidiKeyboard::keyPressed(const KeyPress& e)
+void CustomMidiKeyboard::globalFocusChanged(juce::Component* focusedComponent)
+{
+    if(focusedComponent != this){
+        std::fill(this->selectedKeys.begin(), this->selectedKeys.end(), false);
+        this->repaint();
+    }
+}
+
+void CustomMidiKeyboard::receivKeyPressed(const KeyPress& e)
 {
     if(isAssignMode == false){
-        return false;
+        return;
     }
 
     auto currentSelectedKey = std::find(selectedKeys.begin(), selectedKeys.end(), true);
     if(currentSelectedKey != selectedKeys.end())
     {
         auto index = std::distance(selectedKeys.begin(), currentSelectedKey);
-        //ESCAPEで選択鍵盤からアサインしたキーを削除
-        if(e.isKeyCode(KeyPress::escapeKey)){
-            assignKeys[index] = KeyPress();
-        }
-        else{
-            assignKeys[index] = e;
-        }
+        assignKeys[index] = e;
         this->repaint();
     }
-    return false;
+    return;
 }
 
 String CustomMidiKeyboard::getWhiteNoteText(int midiNoteNumber)

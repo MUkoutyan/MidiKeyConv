@@ -1,4 +1,4 @@
-﻿/*
+/*
   ==============================================================================
 
     This file contains the basic startup code for a JUCE application.
@@ -16,7 +16,7 @@ public:
     //==============================================================================
     MidiKeyConvApplication() {}
 
-    const juce::String getApplicationName() override       { return ProjectInfo::projectName; }
+    const juce::String getApplicationName() override       { return juce::String(ProjectInfo::projectName) + " Ver." + ProjectInfo::versionString;; }
     const juce::String getApplicationVersion() override    { return ProjectInfo::versionString; }
     bool moreThanOneInstanceAllowed() override             { return true; }
 

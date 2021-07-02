@@ -15,6 +15,7 @@
 class KeyMessageSender;
 class CustomMidiKeyboard : public juce::MidiKeyboardComponent
                          , public juce::MidiKeyboardStateListener
+                         , public juce::FocusChangeListener
 {
 public:
     explicit CustomMidiKeyboard(KeyMessageSender* keySender, juce::MidiKeyboardState& state, juce::MidiKeyboardComponent::Orientation orientation);
@@ -23,6 +24,8 @@ public:
     void AssignKey(int assignNote, const juce::KeyPress& key);
     std::vector<int> SelectedKeys() const;
     const std::array<juce::KeyPress, 128>& GetAssignedKey() const;
+
+    void receivKeyPressed(const juce::KeyPress&);
 
 protected:
 
@@ -43,7 +46,7 @@ protected:
 
     bool mouseDownOnKey(int midiNoteNumber, const juce::MouseEvent& e) override;
 
-    bool keyPressed(const juce::KeyPress&) override; 
+    void globalFocusChanged(juce::Component* focusedComponent) override;
 
     juce::String getWhiteNoteText(int midiNoteNumber) override;
     juce::String getBlackNoteText(int midiNoteNumber);

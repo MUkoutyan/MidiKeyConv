@@ -25,6 +25,7 @@ MainComponent::MainComponent()
     , isSuspendSaveProperty(false)
     , properties()
     , propertiesFile(nullptr)
+    , currentFocusComponent(nullptr)
 {
     setPropertiesOption();
 
@@ -128,6 +129,18 @@ void MainComponent::handleIncomingMidiMessage(juce::MidiInput* source, const juc
 {
     const juce::ScopedValueSetter<bool> scopedInputFlag(isAddingFromMidiInput, true);
     keyboardState.processNextMidiEvent(message);
+}
+
+bool MainComponent::keyPressed(const juce::KeyPress& key)
+{
+    auto focusComponent = this->getCurrentlyFocusedComponent();
+    if(focusComponent == &midiKeyboard){
+        midiKeyboard.receivKeyPressed(key);
+    }
+    else if(ccAssign.isParentOf(focusComponent)){
+        ccAssign.receivKeyPressed(key);
+    }
+    return false;
 }
 
 inline void MainComponent::setMidiInput(int index)
